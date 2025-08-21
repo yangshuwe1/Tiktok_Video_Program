@@ -1,0 +1,275 @@
+features:
+  audio:
+    chunk_duration: 30.0
+    detect_events: false
+    detect_music: true
+    enabled: true
+    extract_vocals: true
+    noise_reduce_strength: 0.1
+    overlap_duration: 2.0
+    sample_rate: 16000
+    transcribe_speech: true
+    vad_threshold: 0.2
+  multimodal:
+    batch_size: 16
+    enable_batch_image_upload: true
+    enable_embedding_analysis: false
+    enabled: true
+    image_compression:
+      max_dimension: 512
+      quality: 85
+    representative_frames: 3
+    use_blip: true
+    use_clip: true
+    use_embedding_analyzer: false
+    use_gpt4o: true
+    use_yolo: true
+  visual:
+    batch_size: 8
+    enabled: true
+    extract_highlights: false
+    extract_keyframes: true
+    frame_rate: 3
+    max_frames: 50
+logging:
+  console: true
+  format: '%(asctime)s [%(levelname)s] %(name)s: %(message)s'
+  level: INFO
+  log_file: logs/tiktok_extractor.log
+models:
+  blip:
+    model_name: Salesforce/blip-image-captioning-base
+  clip:
+    model_name: ViT-B/32
+  demucs:
+    model_name: htdemucs
+  embedding_analyzer:
+    embedding_analysis:
+      action_analysis: true
+      object_analysis: true
+      temporal_analysis: true
+      use_clip: true
+      use_vjepa2: true
+      visual_prompts: true
+    enabled: false
+    text_only_mode: false
+    use_clip: false
+    use_vjepa2: false
+    vjepa2:
+      content_complexity: true
+      model_type: vitg16
+      num_frames: 16
+      temporal_analysis: true
+      video_embeddings: true
+  gpt4o:
+    input_price_per_1k: 0.0006
+    max_tokens: 2048
+    model_name: gpt-4o-mini
+    output_price_per_1k: 0.0024
+    prompts:
+      comprehensive_analysis: "You are a professional TikTok video content analysis\
+        \ expert with comprehensive knowledge of TikTok's content creator tag system.\
+        \ \nAnalyze the provided video content (including frames, audio transcript,\
+        \ and metadata) and return ONLY a valid JSON response with the following unified\
+        \ structure:\n\n{\n  \"video_description\": \"comprehensive description of\
+        \ the entire video content\",\n  \"primary_category\": \"beauty & personal\
+        \ care|fashion & accessories|home & lifestyle|sports & fitness|health & wellness|parenting\
+        \ & family|food & beverage|technology & gadgets|entertainment & gaming|travel\
+        \ & adventure|education & learning|pets & animals|automotive & transportation|business\
+        \ & finance|art & creativity|diy & crafts|comedy|dance|music|news & politics|science\
+        \ & nature|other\",\n  \"secondary_category\": \"skincare|makeup|haircare|fragrance|clothing|shoes|accessories|jewelry|home\
+        \ decor|kitchenware|gardening|fitness equipment|supplements|diet|mental health|recipes|restaurants|baking|adventure|hotels|budget\
+        \ travel|gadgets|apps|software|consoles|mobile games|team sports|yoga|running|early\
+        \ education|language learning|toddler care|teen issues|dog care|cat care|car\
+        \ reviews|motorcycles|investing|entrepreneurship|movies|tv shows|painting|knitting|woodworking|standup|skits|choreography|cover\
+        \ songs|current events|environment|other\",\n  \"tertiary_category\": \"specific\
+        \ product type or niche within secondary category\",\n  \n  \"creator_analysis\"\
+        : {\n    \"gender\": \"male|female|multiple-people|non-human|unknown\",\n\
+        \    \"age\": \"child|teen|20s|30s|40s|50+|unknown\",\n    \"physical_appearance\"\
+        : \"very appealing|appealing|average|distinctive|unknown\",\n    \"body_type\"\
+        : \"slim|average|athletic|curvy|plus-size|unknown\",\n    \"hair_color\":\
+        \ \"black|brunette|blonde|red|mixed-colored|unknown|not-visible\",\n    \"\
+        hair_type\": \"straight|wavy|curly|coily|updo|tied|braids|unknown|not-visible\"\
+        ,\n    \"persona\": [\"fashionista|beauty guru|fitness enthusiast|foodie|traveler|tech\
+        \ geek|gamer|mommy blogger|pet lover|financial advisor|comedian|dancer|musician|educator|activist|artist|craftsman|lifestyle\
+        \ coach|health expert|reviewer|unboxer|vlogger|storyteller|influencer|model|expert\"\
+        ],\n    \"charisma_authenticity\": \"enthusiastic & energetic|professional\
+        \ & authoritative|authentic & relatable|engaging & expressive|calm & soothing|unknown\"\
+        ,\n    \"economic_status\": \"luxury-focused|middle-class|budget-conscious|minimalist|unknown\"\
+        \n  },\n  \n  \"content_analysis\": {\n    \"niche_specialty\": [\"skincare\
+        \ routines|makeup tutorials|hair styling|outfit ideas|home organization|workout\
+        \ plans|healthy recipes|travel hacks|tech reviews|gaming walkthroughs|parenting\
+        \ advice|pet training|car maintenance|investment tips|comedy skits|dance tutorials|song\
+        \ covers|educational content|art tutorials|diy projects|fashion hauls|beauty\
+        \ hauls|food reviews|budget travel tips|luxury unboxing|fitness challenges|mental\
+        \ health awareness|sustainable living\"],\n    \"content_format\": [\"tutorial|review|vlog|Q&A|challenge|prank|haul|day-in-the-life|how-to|tips\
+        \ & tricks|storytime|pov|comedy sketch|dance video|music video|educational|inspirational|motivational|interview|behind-the-scenes|unboxing|comparison|transformation|live\
+        \ stream\"],\n    \"overall_tone\": [\"informative|humorous|inspirational|relaxing|dramatic|romantic|sarcastic|upbeat|serious|mysterious|suspenseful|heartwarming|emotional|empowering|casual|formal\"\
+        ],\n    \"energy_levels\": \"vibrant & passionate|composed & professional|calm\
+        \ & soothing|energetic & dynamic|relaxed & peaceful|unknown\",\n    \"visual_presentation\"\
+        : [\"minimalist|bright & colorful|dark & moody|warm & cozy|professional lighting|natural\
+        \ lighting|dynamic editing|cinematic|aesthetic|raw & unfiltered|retro|futuristic|vintage\"\
+        ],\n    \"product_presentation\": [\"product showcase|unboxing & reviews|voiceover\
+        \ content|live demonstrations|before & after comparisons|product comparisons|tutorial|haul|gift\
+        \ guide|collection|restock|routine|get ready with me|what's in my bag|try\
+        \ on haul\"],\n    \"video_quality\": \"very-high|high|moderate|low|unknown\"\
+        ,\n    \"video_scene\": \"daily life|family life|at work|professional settings|outdoor\
+        \ activities|social activities|travel scenes|special occasions|studio|bedroom|bathroom|kitchen|living\
+        \ room|garden|gym|cafe|restaurant|store|beach|mountains|city|countryside|other\"\
+        ,\n    \"video_background\": \"indoor|outdoor|kitchen|bedroom|living room|bathroom|office|studio|gym|cafe|restaurant|store|beach|mountains|city\
+        \ street|park|other\",\n    \"pacing\": \"very-fast|fast|moderate|slow|very-slow|unknown\"\
+        ,\n    \"speech_rate\": \"very-fast|fast|moderate|slow|very-slow|no-speech|unknown\"\
+        ,\n    \"face_visibility\": \"always-visible|frequently-visible|occasionally-visible|rarely-visible|never-visible|unknown\"\
+        ,\n    \"tiktok_effects\": [\"filters|ar-effects|text-overlay|green-screen|split-screens|stitches|duets|slow-motion|time-lapse|zoom-effects|transition-effects|voice-effects|stickers|emoji|none\"\
+        ]\n  },\n  \n  \"business_analysis\": {\n    \"commercial_intent\": \"commercial|non-commercial|educational|promotional|informational|entertainment|mixed\"\
+        ,\n    \"product_placement\": \"explicit|subtle|none|prominent|background|integrated\"\
+        ,\n    \"target_audience\": \"Detailed description of intended viewer demographics\
+        \ and interests\",\n    \"target_audience_fit\": \"low|moderate|high|very-high|unknown\"\
+        ,\n    \"engagement_drivers\": [\"promotional-sales|controversial-topics|clickbait|exaggerated-expression|relatable-struggle|satisfying-process|motivational-message|humor|emotional-story|shocking-facts|interactive-polls|user-participation|trending-music|celebration-events|exclusive-content\"\
+        ],\n    \"trend_adoption\": [\"dance-challenges|audio-trends|meme-adaptations|pov-storytelling|seasonal-themes|hashtag-challenges|transition-challenges|outfit-challenges|recipe-trends|fitness-challenges|beauty-trends|comedy-trends|duet-chains|stitch-reactions\"\
+        ],\n    \"branding_integration\": \"subtle|moderate|overt|not-present|seamless|forced|other\"\
+        ,\n    \"call_to_actions\": [\"like|share|comment|follow|link-in-bio|swipe-up|buy-now|join-live-stream|save|tag-friends|visit-website|download-app|sign-up|enter-giveaway|use-code\"\
+        ],\n    \"has_discount\": true,\n    \"has_limited_time_discount\": true,\n\
+        \    \"has_exclusive_discount\": true\n  },\n  \n  \"product_analysis\": {\n\
+        \    \"key_products\": [\"Product Name 1\", \"Product Name 2\"],\n    \"brands_mentioned\"\
+        : [\"Brand 1\", \"Brand 2\"],\n    \"selling_points\": [\"Key benefit 1\"\
+        , \"Key benefit 2\"],\n    \"content_creative_ideas\": \"Description of innovative\
+        \ presentation approaches\",\n    \"emotional_value\": \"Description of emotional\
+        \ resonance created\",\n  },\n  \n  \"user_analysis\": {\n    \"user_demographics\"\
+        : \"Target user group description\",\n    \"user_preferences\": \"Typical\
+        \ preferences of target audience\",\n    \"user_pain_points\": \"Key frustrations\
+        \ addressed\",\n    \"user_goals\": \"Aspirations and objectives of users\"\
+        \n  },\n  \n  \"performance_analysis\": {\n    \"content_style\": \"Description\
+        \ of stylistic approach\",\n    \"engagement_potential\": \"high|medium|low|very-high|unknown\"\
+        ,\n    \"trend_alignment\": [\"Current trend 1\", \"Current trend 2\"],\n\
+        \    \"compliance_issues\": [\"auctions|exaggerated promises|false or misleading\
+        \ info|gambling & gamification|illegal or criminal activity|other\"]\n  },\n\
+        \  \n  \"optimization_suggestions\": {\n    \"content\": [\"Suggestion 1\"\
+        , \"Suggestion 2\"],\n    \"product_placement\": [\"Suggestion 1\", \"Suggestion\
+        \ 2\"],\n    \"content_creative_ideas\": [\"Suggestion 1\", \"Suggestion 2\"\
+        ],\n    \"emotional_value\": [\"Suggestion 1\", \"Suggestion 2\"],\n    \"\
+        compliance_issues\": [\"Suggestion 1\", \"Suggestion 2\"]\n  }\n}\n\nIMPORTANT:\
+        \ Return ONLY the JSON object, no additional text or explanations. Use the\
+        \ exact field names and structure provided above. Choose values ONLY from\
+        \ the enumerated options provided for each field.\n"
+    temperature: 0.1
+  openai_api_key:
+  whisper:
+    language: null
+    model_size: small
+    task: transcribe
+  yolo:
+    confidence_threshold: 0.8
+    fallback_model: models/yolov8x.pt
+    model_path: models/yolov8s-world.pt
+output:
+  compression_enabled: true
+  csv_output_path: data/video_features_results.csv
+  json_output_path: data/video_features_results.json
+  save_audio: true
+  save_frames: true
+  save_intermediate_results: true
+processing:
+  batch_size: 16
+  enable_progress_bar: true
+  max_workers: 4
+  parallel: false
+
+# TikTok API Configuration
+tiktok:
+  # API Settings
+  ms_token:
+  browser: "webkit"  # chromium, firefox, webkit
+  max_retries: 3
+  playwright_headless: false
+  
+  # Rate Limiting
+  rate_limit_delay: 5  # Delay between API calls in seconds
+  max_requests_per_minute: 20
+  
+  # Video Collection
+  max_videos_per_creator: 30
+  enable_video_download: true  # Download actual video files for full multimodal analysis
+  download_dir: "data/tiktok_videos"
+  prefer_yt_dlp_first: true  # Prefer yt-dlp for downloads to avoid browser anti-bot issues
+  
+  # Data Processing
+  extract_tags: true
+  extract_hashtags: true
+  extract_mentions: true
+  extract_music_info: true
+  
+  # Output Settings
+  save_raw_data: true
+  save_metadata: true
+  save_analysis: true
+  output_formats: ["csv", "json"]
+  
+  # Analysis Integration
+  enable_feature_extraction: true
+  enable_content_analysis: true
+  enable_engagement_analysis: true
+  use_lightweight_analyzer: false  # Force full multimodal analysis when false
+  
+  # Error Handling
+  continue_on_error: true
+  log_errors: true
+  retry_failed_requests: true
+  
+  # Proxy Settings (optional)
+  use_proxy: false
+  proxy_config:
+    host: ""
+    port: ""
+    username: ""
+    password: ""
+  
+  # User Agent Settings
+  custom_user_agent: "Mozilla/5.0 (Macintosh; Intel Mac OS X 13_5) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/16.5 Safari/605.1.15"
+  
+  # Session Management
+  session_timeout: 600  # seconds
+  max_sessions: 1
+  session_rotation: false
+
+  # Download & Anti-bot
+  use_yt_dlp_fallback: true
+  cookies_file: "/app/data/2d533f70-9cb0-4d3a-9edc-66558a078e62.txt"
+  extra_cookies: []
+
+  # Batch Processing Configuration
+  batch_processing:
+    enabled: true
+    batch_size: 5  # Number of creators to process in each batch
+    max_concurrent_creators: 2  # Maximum concurrent creator processing
+    delay_between_batches: 10  # Seconds between batches
+    
+  # Progress Management
+  progress_tracking:
+    enabled: true
+    progress_file: "data/batch_progress.json"
+    auto_save_interval: 300  # Save progress every N seconds
+    resume_from_checkpoint: true
+    
+  # Storage Management
+  storage_management:
+    auto_cleanup: true
+    cleanup_after_analysis: true
+    max_disk_usage_percent: 100  # Stop processing if disk usage exceeds this
+    temp_file_retention_hours: 24  # Keep temp files for N hours
+    video_cleanup_strategy: "after_analysis"  # after_analysis, after_batch, manual
+    
+  # Creator Analysis Limits
+  creator_limits:
+    max_videos_per_creator: 5
+    max_creators_per_batch: 10
+    skip_processed_creators: true
+    creator_priority: "engagement"  # engagement, followers, recent_activity
+    
+  # Enhanced Analysis Features
+  enhanced_analysis:
+    promotion_detection: true
+    brand_mention_analysis: true
+    partnership_identification: true
+    call_to_action_detection: true
+    commercial_content_scoring: true

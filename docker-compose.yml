@@ -1,0 +1,37 @@
+services:
+  tiktok-analyzer:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        - BUILDKIT_INLINE_CACHE=1
+    container_name: tiktok-video-analyzer
+    ports:
+      - "8888:8888"
+    volumes:
+      - .:/app
+      # Add volume for Playwright browser data
+      - playwright_data:/root/.cache/ms-playwright
+    environment:
+      - PYTHONPATH=/app
+      - CUDA_VISIBLE_DEVICES=0
+      - YOLO_CONFIG_DIR=/tmp/ultralytics
+      - TORCH_HOME=/app/models
+      - HF_HOME=/app/models
+      - PYTORCH_CUDA_ALLOC_CONF=max_split_size_mb:512
+      # TikTok API environment variables
+      - TIKTOK_BROWSER=chromium
+      - DISPLAY=:99
+    working_dir: /app
+    restart: unless-stopped
+    command: ["jupyter", "notebook", "--ip=0.0.0.0", "--port=8888", "--no-browser", "--allow-root", "--NotebookApp.token=''", "--NotebookApp.password=''", "--NotebookApp.allow_origin='*'", "--NotebookApp.allow_remote_access=True"]
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: 1
+              capabilities: [gpu]
+
+volumes:
+  playwright_data: 

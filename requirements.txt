@@ -1,0 +1,66 @@
+# Core dependencies (installed separately in Dockerfile)
+# torch
+# torchvision  
+# torchaudio
+# numpy<2.0.0
+# pandas
+# Pillow
+# tqdm
+# opencv-python
+# matplotlib
+# seaborn
+# jupyter
+# ipykernel
+
+# Audio processing
+ffmpeg-python
+openai-whisper
+librosa
+soundfile
+scipy
+
+# OpenAI API
+openai
+
+# Audio source separation
+dora-search
+pyyaml
+demucs
+
+# Computer vision and ML
+ultralytics
+transformers
+scikit-learn
+
+# Qwen multimodal model
+modelscope
+transformers_stream_generator
+einops
+
+# Model optimization
+bitsandbytes
+accelerate
+auto-gptq
+
+# Image processing
+scikit-image
+
+# Utilities
+shazamio
+protobuf
+
+# Download fallback
+yt-dlp
+
+# V-JEPA2 dependencies
+timm
+
+# Git repositories
+git+https://github.com/openai/CLIP.git
+git+https://github.com/facebookresearch/vjepa2.git
+
+# Browser automation
+playwright
+ 
+# TikTok API
+TikTokApi==6.5.2
